@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -21,9 +22,9 @@ class LoginController extends BaseController
         ]);
 
         if (Auth::attempt($credentials)) {
-            $token = $request->user()->createToken('token1');
+            $token = $request->user()->createToken('token');
             return response()->json([
-                'token' => $token,
+                'token' => $token->plainTextToken,
                 'message' => 'Success'
               ], 200);
 
@@ -34,4 +35,16 @@ class LoginController extends BaseController
         }
 
     }
+
+    function signUp(Request $request){
+        $repitedEmail = User::where('email', $request->email);
+        if ($repitedEmail) {
+            return response()->json([
+                'message' => 'This email already exists!'
+            ],409);
+        }
+        return response()->json([User::create($request->all())],200);
+    }
+
+  
 }

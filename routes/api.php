@@ -20,10 +20,11 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('/signup', [ApiController::class, 'createUser']);
+Route::post('/signup', [LoginController::class, 'signUp']);
 // Route::get('/user/{id}', [ApiController::class, 'getUser']);
 
 Route::middleware('auth:sanctum')->get('/user/{id}', [ApiController::class, 'getUser']);
+Route::middleware('auth:sanctum')->post('/user/{id}/{token}', [ApiController::class, 'editUser']);
 Route::post('/login', [LoginController::class, 'login']);
 
  
