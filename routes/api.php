@@ -24,7 +24,8 @@ Route::post('/signup', [LoginController::class, 'signUp']);
 // Route::get('/user/{id}', [ApiController::class, 'getUser']);
 
 Route::middleware('auth:sanctum')->get('/user/{id}', [ApiController::class, 'getUser']);
-Route::middleware('auth:sanctum')->post('/user/{id}/{token}', [ApiController::class, 'editUser']);
+Route::middleware('auth:sanctum')->post('/user/{id}', [ApiController::class, 'editUser']);
+Route::middleware('auth:sanctum')->delete('/user/{id}', [ApiController::class, 'deleteUser']);
 Route::post('/login', [LoginController::class, 'login']);
 
  
