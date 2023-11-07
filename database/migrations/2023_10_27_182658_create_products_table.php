@@ -19,6 +19,8 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->unsigned();
             $table->integer('stock_quantity')->unsigned();
             $table->boolean('is_active')->default(true);
+            $table->float('rate')->nullable()->default(NULL);
+            $table->string('opinion')->nullable()->default(NULL);
             
         });
     }
