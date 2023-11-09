@@ -13,10 +13,10 @@ return new class extends Migration
     {
         //
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('type_id');
-            $table->unsignedBigInteger('product_id')->nullable();
-            $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('type_id')->references('id')->on('users_type');
+            $table->unsignedBigInteger('user_type_id');
+            $table->unsignedBigInteger('user_product_id')->nullable();
+            $table->foreign('user_product_id')->references('id')->on('products');
+            $table->foreign('user_type_id')->references('id')->on('users_type');
         });
     }
 

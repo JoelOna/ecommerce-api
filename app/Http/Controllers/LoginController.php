@@ -21,9 +21,14 @@ class LoginController extends BaseController
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        $user = User::where('email', $credentials['email'])->first();
+
+       $user = User::where('email', $credentials['email'])->first();
+       if(!$user){
+        return response()->json(['message'=>"Email not found"], 401);
+       }
+
         if (Auth::attempt($credentials)) {
-            if($user->type_id <= 2){
+            if($user->user_type_id <= 2){
                 $token = $request->user()->createToken('auth-token-worker');
                 return response()->json([
                     'token' => $token->plainTextToken,
@@ -38,7 +43,7 @@ class LoginController extends BaseController
 
         }else{
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => 'You password or email is wrong!'
               ], 401);
         }
 
