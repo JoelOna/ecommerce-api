@@ -21,8 +21,13 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+Auth::routes(['verify' => true]);
+
 /** USER */
 Route::post('/signup', [LoginController::class, 'signUp']);
+// Route::middleware(['auth:sanctum','verified'])->get('/user/{id}', [ApiController::class, 'getUser']);
+// Route::middleware(['auth:sanctum','verified'])->put('/user', [ApiController::class, 'editUser']);
+// Route::middleware(['auth:sanctum','verified'])->delete('/user', [ApiController::class, 'deleteUser']);
 Route::middleware('auth:sanctum')->get('/user/{id}', [ApiController::class, 'getUser']);
 Route::middleware('auth:sanctum')->put('/user', [ApiController::class, 'editUser']);
 Route::middleware('auth:sanctum')->delete('/user', [ApiController::class, 'deleteUser']);

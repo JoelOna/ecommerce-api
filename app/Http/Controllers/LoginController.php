@@ -56,6 +56,9 @@ class LoginController extends BaseController
                 'message' => 'This email already exists!'
             ],409);
         }
+        // $user = User::create($request->all());
+        // $user->sendEmailVerificationNotification();
+        // return response()->json(['data'=>$user],200);
         return response()->json(['data'=>User::create($request->all())],200);
     }
     function logout(Request $request){
