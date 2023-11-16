@@ -12,12 +12,19 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 
+
 class ProductController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    function getProduct(Request $request){
-        return response()->json(['data' =>Product::find($request->id)],200) ;
+    function getProduct($id){
+        $product = Product::find($id);
+    
+        if (!$product) {
+            return response()->json(['error' => 'Producto no encontrado'], 404);
+        }
+        
+        return response()->json(['data' => $product], 200);
     }
 
     function getProducts(){
@@ -41,6 +48,24 @@ class ProductController extends BaseController
         return Product::paginate(10);
     }
 
+    function getProductIMG($idProduct) {
+        $product = Product::find($idProduct);
+        
+        if (!$product) {
+            return response()->json(['error' => 'Producto no encontrado'], 404);
+        }
+        $rutaImagen = public_path('/upload/img/products/'.$product->prod_image);  
+
+        if (!file_exists($rutaImagen)) {
+            return response()->json(['error' => 'Imagen no encontrada'], 404);
+        }
+
+        $tipoContenido = mime_content_type($rutaImagen);
+
+        header("Content-Type: $tipoContenido");
+        return response()->file($rutaImagen);
+    }
+
     function addProduct(Request $request){
         if (auth()->user()->tokenCan('auth-token-worker')) {
         $userId = $request->userId;
@@ -50,7 +75,26 @@ class ProductController extends BaseController
                 'message' => 'Unathourized'
             ], 401);
         }
-        return response()->json(['data'=>Product::create($request->all()),
+        $product = new Product;
+        $product->prod_name = $request->prod_name;
+        $product->prod_name_en = $request->prod_name_en;
+        $product->prod_description = $request->prod_description;
+        $product->prod_description_en = $request->prod_description_en;
+        $product->prod_price = $request->prod_price;
+        $product->prod_stock_quantity = $request->prod_stock_quantity;
+        $product->prod_is_active = $request->prod_is_active;
+        $product->prod_rate = $request->prod_rate;
+        $product->prod_opinion = $request->prod_opinion;
+
+        if($request->file('prod_image')){
+            $file= $request->file('prod_image');
+            $name = str_replace(' ','_',$product->prod_name);
+            $filename = $name.'_'.uniqid().'.'.$file->getClientOriginalExtension();
+            $file-> move(public_path('upload/img/products'), $filename);
+            $product->prod_image = $filename;
+        }
+        $product->save();
+        return response()->json(['data'=>$product,
                                 'message'=>'Created successfully!'],200);
     }
         return response()->json([
@@ -75,7 +119,13 @@ class ProductController extends BaseController
                 'message' => 'Product not found'
             ], 404);
         }
-        
+        if($request->file('prod_image')){
+            $file= $request->file('prod_image');
+            $name = str_replace(' ','_',$product->prod_name);
+            $filename = $name.'_'.uniqid().'.'.$file->getClientOriginalExtension();
+            $file-> move(public_path('upload/img/products'), $filename);
+            $product->prod_image = $filename;
+        }
         $product->update($request->all());
     
         return response()->json([

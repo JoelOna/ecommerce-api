@@ -36,6 +36,7 @@ Route::post('/login', [LoginController::class, 'login']);
 
 /** PRODUCTS */
 Route::get('/product/{id}', [ProductController::class, 'getProduct']);
+Route::get('/product-image/{idProduct}', [ProductController::class, 'getProductIMG']);
 // Route::get('/products', [ProductController::class, 'getProducts']);
 Route::get('/products', [ProductController::class, 'getProductsPaginated']);
 Route::middleware('auth:sanctum')->post('/product', [ProductController::class, 'addProduct']);
