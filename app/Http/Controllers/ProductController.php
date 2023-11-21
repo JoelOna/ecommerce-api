@@ -45,8 +45,21 @@ class ProductController extends BaseController
         ],200);
     }
     function getProductsPaginated(){
-        return Product::paginate(10);
+        $products = Product::paginate(10);
+        return response()->json([
+            'info' => [
+                'first_page' => $products->url(1),
+                'last_page' => $products->url($products->lastPage()),
+                'next_page' => $products->nextPageUrl(),
+                'prev_page' => $products->previousPageUrl(),
+                'per_page' => $products->perPage(),
+                'to' => $products->lastItem(),
+                'total' => $products->total(),
+            ],
+            'data' => $products->items(),
+        ], 200);
     }
+    
 
     function getProductIMG($idProduct) {
         $product = Product::find($idProduct);
@@ -67,7 +80,19 @@ class ProductController extends BaseController
     }
 
     function addProduct(Request $request){
-        if (auth()->user()->tokenCan('auth-token-worker')) {
+        if (auth()->user()->tokenCan('auth-token-worker')) { 
+            $validator = $request->validate([
+                'userId'=>'required|integer',
+                'prod_name'=>'required|string',
+                'prod_name_en'=>'string',
+                'prod_description' => 'required|string|min:10',
+                'prod_description_en' => 'required|string|min:10',
+                'prod_price' => 'required|decimal:2|min:0',
+                'prod_stock_quanitity'=> 'integer|required|min:0',
+                'prod_is_active' => 'integer|required|min:0|max:1',
+                'prod_rate'=> 'integer|min:1|max:5',
+                'prod_opinion'=>'string'
+            ]);
         $userId = $request->userId;
         $user = User::find($userId);
         if (!$user || $user->user_type_id > 3 ) {
@@ -75,6 +100,7 @@ class ProductController extends BaseController
                 'message' => 'Unathourized'
             ], 401);
         }
+        try {
         $product = new Product;
         $product->prod_name = $request->prod_name;
         $product->prod_name_en = $request->prod_name_en;
@@ -96,6 +122,9 @@ class ProductController extends BaseController
         $product->save();
         return response()->json(['data'=>$product,
                                 'message'=>'Created successfully!'],200);
+    }
+      catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
         return response()->json([
             'message' => 'Unathourized'
@@ -164,4 +193,5 @@ class ProductController extends BaseController
             'data' => $product
         ], 200);
     }
+}
 }
