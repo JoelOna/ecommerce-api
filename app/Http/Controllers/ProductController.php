@@ -33,12 +33,12 @@ class ProductController extends BaseController
 
     function getRelatedProducts(Request $request){
         $productId = $request->productId;
-        $product = Products_categories::where($productId, 'product_id');
+        $product = Products_categories::where('product_id',$productId)->get();
 
         if(!$product){
             return response()->json([ 'message'=>"No product found with this id"],404);
         }
-        $relatedProducts = Products_categories::where($product->category_id,'category_id')->limit(5);
+        $relatedProducts = Products_categories::where('category_id',$product->category_id,)->limit(5);
 
         return response()->json([
             'data' => $relatedProducts

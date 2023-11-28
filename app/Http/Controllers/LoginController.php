@@ -64,14 +64,14 @@ class LoginController extends BaseController
     function logout(Request $request){
        $token = PersonalAccessToken::where('tokenable_id',$request->id) ->whereNotNull('last_used_at')
        ->latest('last_used_at')
-       ->first();;
+       ->first();
        if ($token->delete()) {
            
         return response()->json(
             [
                 'status' => 'success',
                 'message' => 'User logged out successfully'
-            ]);
+            ],200);
        }
        return response()->json(
         [
