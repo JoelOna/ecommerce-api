@@ -12,7 +12,17 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 
-
+/**
+ * @group Products
+ *
+ * APIs para manejar productos.
+ *
+ * @OA\Info(
+ *      title="Nombre de tu API",
+ *      version="1.0.0",
+ *      description="Descripción de tu API",
+ * )
+ */
 class ProductController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -27,6 +37,27 @@ class ProductController extends BaseController
         return response()->json(['data' => $product], 200);
     }
 
+        /**
+     * Obtener todos los productos.
+     *
+     * @response 200 {
+     *   "data": [
+     *     {
+     *       "id": 1,
+     *       "prod_name": "Nombre del Producto 1",
+     *       // ... (otros campos del producto 1)
+     *     },
+     *     {
+     *       "id": 2,
+     *       "prod_name": "Nombre del Producto 2",
+     *       // ... (otros campos del producto 2)
+     *     },
+     *     // ... (otros productos)
+     *   ]
+     * }
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     function getProducts(){
         return response()->json(['data' =>Product::all()],200);
     }
@@ -168,7 +199,7 @@ class ProductController extends BaseController
         ],401);
     
     }
-    function deleteProduct (Request $request){
+    function deleteProduct ($id, Request $request){
         $userId = $request->userId;
         $user = User::find($userId);
 
@@ -177,8 +208,8 @@ class ProductController extends BaseController
                 'message' => 'Unathourized'
             ], 401);
         }
-        $productId = $request->id;
-        $product = Product::find($productId);
+        
+        $product = Product::find($id);
 
         if(!$product){
             return response()->json([

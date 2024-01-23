@@ -32,13 +32,15 @@ class LoginController extends BaseController
                 $token = $request->user()->createToken('auth-token-worker');
                 return response()->json([
                     'token' => $token->plainTextToken,
-                    'message' => 'Success'
+                    'message' => 'Success',
+                    'data' => $user
                   ], 200);
             }
             $token = $request->user()->createToken('auth-token');
             return response()->json([
                 'token' => $token->plainTextToken,
-                'message' => 'Success'
+                'message' => 'Success',
+                'data' => $user
               ], 200);
 
         }else{
@@ -56,10 +58,11 @@ class LoginController extends BaseController
                 'message' => 'This email already exists!'
             ],409);
         }
+        User::create($request->all());
         // $user = User::create($request->all());
         // $user->sendEmailVerificationNotification();
         // return response()->json(['data'=>$user],200);
-        return response()->json(['data'=>User::create($request->all())],200);
+        return $this->login($request);
     }
     function logout(Request $request){
        $token = PersonalAccessToken::where('tokenable_id',$request->id) ->whereNotNull('last_used_at')

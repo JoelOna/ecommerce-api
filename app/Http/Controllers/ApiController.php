@@ -17,19 +17,18 @@ class ApiController extends BaseController
 
     /* USER */
 
-    function getUser($id)
+    function getUser($user_name)
     {
         if (auth()->user()->tokenCan('auth-token')) {
-            if ($id) {
-                $id = (integer) $id;
-                $user = User::find($id);
+            if ($user_name) {
+                $user = User::where('user_name', $user_name)->get();
                 if ($user) {
                     return $user;
                 } else {
                     return response()->json(['error' => 'Usuer not found'], 404);
                 }
             } else {
-                return response()->json(['error' => 'User id is required'], 400);
+                return response()->json(['error' => 'User name is required'], 400);
             }
         }
         return response()->json([
