@@ -23,7 +23,7 @@ class ApiController extends BaseController
             if ($user_name) {
                 $user = User::where('user_name', $user_name)->get();
                 if ($user) {
-                    return $user;
+                    return response()->json(['data'=> $user],200);
                 } else {
                     return response()->json(['error' => 'Usuer not found'], 404);
                 }
@@ -35,6 +35,25 @@ class ApiController extends BaseController
             'message' => 'Unauthorized'
         ], 401);
     }
+    function getUserById($id)
+    {
+       
+            if ($id) {
+                $user = User::find($id);
+             
+                if ($user) {
+                    return response()->json(['data'=> [
+                        // $user->user_name, $user->created_at
+                        $user
+                    ]],200);
+                } else {
+                    return response()->json(['error' => 'Usuer not found'], 404);
+                }
+            } else {
+                return response()->json(['error' => 'User name is required'], 400);
+            
+       
+    }}
 
     function editUser(Request $request)
     {

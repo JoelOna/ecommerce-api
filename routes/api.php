@@ -4,6 +4,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,7 @@ Route::post('/signup', [LoginController::class, 'signUp']);
 // Route::middleware(['auth:sanctum','verified'])->put('/user', [ApiController::class, 'editUser']);
 // Route::middleware(['auth:sanctum','verified'])->delete('/user', [ApiController::class, 'deleteUser']);
 Route::middleware('auth:sanctum')->get('/user/{user_name}', [ApiController::class, 'getUser']);
+Route::get('/user-review/{id}', [ApiController::class, 'getUserById']);
 Route::middleware('auth:sanctum')->put('/user', [ApiController::class, 'editUser']);
 Route::middleware('auth:sanctum')->delete('/user', [ApiController::class, 'deleteUser']);
 Route::post('/logout', [LoginController::class, 'logout']);
@@ -46,4 +48,7 @@ Route::middleware('auth:sanctum')->delete('/product/id', [ProductController::cla
 
 /** Categories */
 Route::get('/categories',[CategoryController::class, 'getCategories']);
+
+/** Reviews */
+Route::get('/reviews/{productId}',[ReviewController::class, 'productReviews']);
  

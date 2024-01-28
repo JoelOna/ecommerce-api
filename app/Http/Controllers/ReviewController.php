@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Order;
+use Illuminate\Pagination\LengthAwarePaginator;
 class ReviewController extends BaseController
 {
     use HasApiTokens;
@@ -95,9 +96,13 @@ class ReviewController extends BaseController
     }
 
     public function productReviews($productId){
-        $reviews = Review::where('review_product_id',$productId)->get();
+        $perPage = 5;
+    $reviews = Review::where('review_product_id', $productId)->get();
 
-        $paginatedReviews = $reviews->paginate(5); 
+    $currentPage = LengthAwarePaginator::resolveCurrentPage();
+    $currentItems = $reviews->slice(($currentPage - 1) * $perPage, $perPage)->all();
+
+    $paginatedReviews = new LengthAwarePaginator($currentItems, count($reviews), $perPage);
         return response()->json([
             'info' => [
                 'first_page' => $paginatedReviews->url(1),
