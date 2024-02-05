@@ -21,7 +21,7 @@ class ApiController extends BaseController
     {
         if (auth()->user()->tokenCan('auth-token')) {
             if ($user_name) {
-                $user = User::where('user_name', $user_name)->get();
+                $user = User::where('user_name', $user_name)->first();
                 if ($user) {
                     return response()->json(['data'=> $user],200);
                 } else {

@@ -13,7 +13,7 @@ class ReviewController extends BaseController
     use HasApiTokens;
     //
     public function addReview(Request $request){
-        if (auth()->user()->tokenCan('auth-token')) {
+        // if (auth()->user()->tokenCan('auth-token')) {
             $user = $request->user_id;
             $product = $request->product_id;
             
@@ -30,10 +30,10 @@ class ReviewController extends BaseController
                 'message' => 'You haven\'t buied this product! '
             ],403);
 
-        }
-        return response()->json([
-            'message' => 'Unathoritzed'
-        ],401);
+        // }
+        // return response()->json([
+        //     'message' => 'Unathoritzed'
+        // ],401);
     }
 
     public function updateReview(Request $request){

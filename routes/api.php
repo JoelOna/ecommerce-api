@@ -51,4 +51,5 @@ Route::get('/categories',[CategoryController::class, 'getCategories']);
 
 /** Reviews */
 Route::get('/reviews/{productId}',[ReviewController::class, 'productReviews']);
+Route::post('/review',[ReviewController::class, 'addReview']);
  
