@@ -52,4 +52,6 @@ Route::get('/categories',[CategoryController::class, 'getCategories']);
 /** Reviews */
 Route::get('/reviews/{productId}',[ReviewController::class, 'productReviews']);
 Route::post('/review',[ReviewController::class, 'addReview']);
+Route::middleware('auth:sanctum')->get('/reviews/user/{userId}',[ReviewController::class, 'userReviews']);
+Route::middleware('auth:sanctum')->delete('/reviews/delete/{idReview}',[ReviewController::class, 'deleteReview']);
  

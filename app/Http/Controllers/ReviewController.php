@@ -63,8 +63,14 @@ class ReviewController extends BaseController
     public function deleteReview($idReview){
         if (auth()->user()->tokenCan('auth-token-worker')) {
             $review = Review::find($idReview);
+            if (!$review) {
                 return response()->json([
-                    'data' => $review
+                    'message' => 'Review no encontrada'
+                ],404);
+            }
+            $review->delete();
+                return response()->json([
+                    'data' => 'Review eliminada correctamente!'
                 ],200);
         }
         return response()->json([
@@ -75,8 +81,10 @@ class ReviewController extends BaseController
     public function userReviews($userId){
         if (auth()->user()->tokenCan('auth-token')) {
         $reviews = Review::where('review_user_id',$userId)->get();
-
-        $paginatedReviews = $reviews->paginate(5); 
+        $perPage = 5;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentItems = $reviews->slice(($currentPage - 1) * $perPage, $perPage)->all();
+        $paginatedReviews = new LengthAwarePaginator($currentItems, count($reviews), $perPage); 
         return response()->json([
             'info' => [
                 'first_page' => $paginatedReviews->url(1),
