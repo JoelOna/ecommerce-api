@@ -224,5 +224,6 @@ class ProductController extends BaseController
             'data' => $product
         ], 200);
     }
+    
 }
 }

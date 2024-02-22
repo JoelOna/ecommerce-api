@@ -36,18 +36,18 @@ class ReviewController extends BaseController
         // ],401);
     }
 
-    public function updateReview(Request $request){
+    public function updateReview(Request $request, $reviewId){
         if (auth()->user()->tokenCan('auth-token')) {
             $user = $request->user_id;
             $product = $request->product_id;
-            
-            $hasOrdered = Order::where('order_user_id',$user)
-            ->where('order_product_id',$product,)
-            ->get();
+            $review = Review::find($reviewId);
+            // $hasOrdered = Order::where('order_user_id',$user)
+            // ->where('order_product_id',$product,)
+            // ->get();
 
-            if ($hasOrdered) {
+            if ($review) {
                 return response()->json([
-                    'data' => Review::update($request->all())
+                    'data' => $review->update($request->all())
                 ],200);
             }
             return response()->json([

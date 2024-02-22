@@ -65,7 +65,7 @@ class LoginController extends BaseController
         return $this->login($request);
     }
     function logout(Request $request){
-       $token = PersonalAccessToken::where('tokenable_id',$request->id) ->whereNotNull('last_used_at')
+       $token = PersonalAccessToken::where('tokenable_id',$request->id)->whereNotNull('last_used_at')
        ->latest('last_used_at')
        ->first();
        if ($token->delete()) {

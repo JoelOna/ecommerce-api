@@ -48,6 +48,9 @@ Route::middleware('auth:sanctum')->delete('/product/id', [ProductController::cla
 
 /** Categories */
 Route::get('/categories',[CategoryController::class, 'getCategories']);
+Route::post('/category',[CategoryController::class, 'addCategory']);
+Route::put('/category',[CategoryController::class, 'editCategory']);
+Route::delete('/category',[CategoryController::class, 'deleteCategory']);
 
 /** Reviews */
 Route::get('/reviews/{productId}',[ReviewController::class, 'productReviews']);
